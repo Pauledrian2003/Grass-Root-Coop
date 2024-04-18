@@ -1,0 +1,58 @@
+(()=>{var te=Object.defineProperty;var ne=(n,e,t)=>e in n?te(n,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):n[e]=t;var c=(n,e,t)=>(ne(n,typeof e!="symbol"?e+"":e,t),t);var N=30;var P="sacode";var C="saref",d="saetc";var R="sa_redirect";var L="group";var v="sa-target-group";var k=4;var G=60*60*24*7;var re=`
+    <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true">
+        <path d="M11.414 10l6.293-6.293a.999.999 0 1 0-1.414-1.414L10 8.586 3.707 2.293a.999.999 0 1 0-1.414 1.414L8.586 10l-6.293 6.293a.999.999 0 1 0 1.414 1.414L10 11.414l6.293 6.293a.997.997 0 0 0 1.414 0 .999.999 0 0 0 0-1.414L11.414 10z" fill-rule="evenodd" fill="white">
+        </path>
+    </svg>
+`,oe="233D1D",ie="DE3618",se="5C6AC4",ae="866E3B";function ce(n,e){return`
+    <style>
+        #sa-toast {
+            background: #${e};
+            color: white;
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translate(-50%, -30px);
+            /*bottom: 30px;*/
+            font-size: 20px;
+            padding: 16px 40px 16px 16px;
+            z-index: 9999999999;
+            animation: slide-up 0.4s ease;
+        }
+        .closing {
+            transform: translate(-50%, 70px)!important;
+            animation: slide-down 0.2s ease!important;
+        }
+        #sa-toast > svg {
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            margin-top: -10px;
+            cursor: pointer;
+        }
+        @keyframes slide-up {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 70px);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -30px);
+            }
+        }
+        @keyframes slide-down {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -30px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, 70px);
+            }
+        }
+    </style>
+    <div id="sa-toast">
+        ${n} 
+        ${re}
+    </div>`}function le(n){switch(n){case"success":return oe;case"info":return se;case"error":return ie;case"warning":return ae}}function U(n,e,t=5e3){let r=document.createElement("div");r.innerHTML=ce(n,le(e)),document.body.appendChild(r);let o=document.getElementById("sa-toast");r.addEventListener("click",()=>{document.body.removeChild(r)}),setTimeout(()=>{o.classList.add("closing"),setTimeout(()=>{r.parentNode!==null&&document.body.removeChild(r)},300)},t)}function H(){try{return document.cookie??null}catch{return null}}function g(n){try{return document.cookie=n,!0}catch{return!1}}function _(n){try{let e=n?window.sessionStorage:window.localStorage,t="__storage_test__";return e.setItem(t,t),e.removeItem(t),e}catch{return null}}var ue=/; */,f=/^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;function pe(n){try{return decodeURIComponent(n)}catch{return n}}function F(n){let e={},t=n.split(ue);for(let r of t){let o=r.indexOf("=");if(o<0)continue;let s=r.substr(0,o).trim(),i=r.substr(++o,r.length).trim();i[0]=='"'&&(i=i.slice(1,-1)),e.hasOwnProperty(s)||(e[s]=pe(i))}return e}function S(n,e,t){let{maxAge:r=null,sameSite:o}=t;if(!f.test(n))throw new TypeError("argument name is invalid");let s=encodeURIComponent(e);if(s&&!f.test(s))throw new TypeError("argument val is invalid");let i=n+"="+s;if(r!==null){if(isNaN(r))throw new Error("maxAge should be a Number");i+="; Max-Age="+Math.floor(r)}if(t.domain){if(!f.test(t.domain))throw new TypeError("option domain is invalid");i+="; Domain="+t.domain}if(t.path){if(!f.test(t.path))throw new TypeError("option path is invalid");i+="; Path="+t.path}if(t.expires&&(i+="; Expires="+t.expires.toUTCString()),t.httpOnly&&(i+="; HttpOnly"),t.secure&&(i+="; Secure"),t.sameSite)switch(o){case!0:i+="; SameSite=Strict";break;case"lax":i+="; SameSite=Lax";break;case"strict":i+="; SameSite=Strict";break;default:throw new TypeError("option sameSite is invalid")}return i}var x=class{sleep(e,t){return new Promise(r=>{let o=()=>{this.clearTimeout(s),t?.removeEventListener("abort",o),r(!0)},s=this.setTimeout(()=>{t?.removeEventListener("abort",o),r(!1)},e);t?.addEventListener("abort",o)})}},h=class extends x{constructor(t,r){super();c(this,"offsetMs");c(this,"setTimeout");c(this,"clearTimeout");this.offsetMs=0,this.setTimeout=t,this.clearTimeout=r}setClock(t){this.offsetMs=t.getTime()-new Date().getTime()}now(){return new Date(new Date().getTime()+this.offsetMs)}async executeIo(t,r){return await r()}};function me(n){return Math.floor(n/1e3)}function B(n){return new Date(n*1e3)}function K(){return me(Date.now())}function Y(n){return n*24*60*60}function $(n){let t=F(n)[d];if(t===void 0)return null;let r=t.match(/([A-Za-z0-9]+)_([0-9]+)/);if(r===null)return null;let o=r[1],s=new Date(parseInt(r[2]));return{sacode:o,iat:s}}function V(n,e){return g(S(d,`${e}_${n.getTime()}`,{maxAge:G,path:"/"}))}function y(){return g(S(d,"",{expires:new Date(0),path:"/"}))}function q(n,e){let r=JSON.stringify({sacode:n,token:e}),o="/",s=K()+Y(N),i=B(s);return g(S(C,r,{expires:i,path:o}))}var de=3*24*60*60;function ge(n){let e=0,t=n.length,r=0;if(t>0)for(;r<t;)e=(e<<5)-e+n.charCodeAt(r++)|0;return e}function z(n){return Math.abs(ge(n)).toString().slice(0,6)}var w="ERROR_CONTEXT_ANNOTATION";function O(n){return typeof n=="object"&&n!==null?Array.isArray(n)?n.map(O):Object.fromEntries(Object.entries(n).map(([e,t])=>[e,e.endsWith("_REDACTME")?"REDACTED":O(t)])):n}var a=class{constructor(e,t=o=>o.stack,r={}){this.handler=e;this.getStack=t;this.context=r}log(e){this.handler(O({...this.context,...e}))}logDebug(...e){this.log({level:"debug",message:e.join(" ")})}logMessage(...e){this.log({level:"info",message:e.join(" ")})}logWarning(...e){this.log({level:"warning",message:e.join(" ")})}logUnhandledRejection(e,t){this.log({level:"error",error:{id:"UNHANDLED",source:"unhandled",reason:e,promise:t}})}logError(e,t="caught",r=!1){let o=z(e.stack??e.name??"");this.log({level:r?"warning":"error",error:{id:o,source:t,name:e.constructor?.name,message:e.message,stack:e.stack},...e[w]??{}})}withContext(e){return new a(this.handler,this.getStack,{...this.context,...e})}runSync(e){try{return e()}catch(t){this.logError(t,"caught")}}async runAsync(e){try{return await e()}catch(t){if(t?.name==="AbortError")throw t;this.logError(t,"caught")}}async annotateAsync(e){try{return await e()}catch(t){throw t instanceof Error&&(t[w]={...t[w],...this.context}),t}}runAsyncBackground(e){this.runAsync(e).then()}wrapSync(e){return()=>this.runSync(e)}wrapAsync(e){return()=>this.runAsync(e)}wrapPromise(e){return this.wrapAsync(()=>e)()}};var A=class{constructor(e,t,r,o,s,i=`https://${s}/${"rpc"}`,b=new a(e)){this.handler=e;this.time=t;this.rng=r;this.client=o;this.shAppHost=s;this.endpoint=i;this.localLogger=b}async call(e){let t=`sarpc${this.rng.randomDigits10()}`;try{let r=await this.client.call(new Request(this.endpoint,{method:"POST",body:JSON.stringify({...e,buildVersion:"",requestId:t})}));return r.status===200?{success:!0,data:await r.json()}:(this.localLogger.log({level:"warning",errorReqId:t,failedRpcStatus:r.status,message:`failed RPC request: ${t}`}),{success:!1,status:r.status})}catch(r){return this.localLogger.log({level:"warning",errorReqId:t,message:`failed RPC request: ${t}, ${r.message}`}),{success:!1,status:0}}}};var l=class{constructor(e){c(this,"rng");this.rng=e}randomFloat(){return this.rng()}randomDigits10(){return Math.floor(this.randomFloat()*1e10).toString().padStart(10,"0")}static createRealRNG(){return new l(Math.random)}static createFakeRNG(){let e=BigInt(1),t=2147483647,r=e;return new l(()=>(r=r*48271n%BigInt(t),Number(r)/t))}};var E=class extends h{constructor(){super(window.setTimeout.bind(window),window.clearTimeout.bind(window))}};var T=class{async call(e){let t=await e.text();return await fetch(e.url,{method:e.method,headers:e.headers,body:t})}};function X(n){let e=new a(o=>{navigator.sendBeacon(`https://${n}/${"beacon"}`,JSON.stringify([o]))}),t="__saTestErrorHandling",r=window[t];return window[t]=()=>{r&&r(),e.logError(new Error("TEST ERROR PLEASE IGNORE"),"caught")},e}function Z(n){let e=new E,t=l.createRealRNG();return new A(r=>{console.log(r),r.error?.stack&&console.error(r.error?.stack)},e,t,new T,n)}function J(){return window?.meta?.page?.customerId?.toString()}function j(){return new Promise((n,e)=>{window.Shopify.loadFeatures([{name:"consent-tracking-api",version:"0.1"}],async t=>{t?e(t):window.Shopify.customerPrivacy.userCanBeTracked()?n():document.addEventListener("trackingConsentAccepted",()=>n())})})}function p(n){return new URLSearchParams(window.location.search).get(n)}var I=(()=>new URL(document.currentScript.src).hostname)();function Q(n){document.readyState==="loading"?document.addEventListener("DOMContentLoaded",n):n()}var M="sa-redirect",D="sa-redirect-backup";async function ee(n,e,t){let r=J(),o=await n.call({endpoint:"link",token:"",version:k,loggedInCustomerId:r,sacode:e,loadedAt:t.toISOString(),userAgent:navigator.userAgent,params:null});o.success&&(o.data.toast!==void 0&&U(o.data.toast.messageHtml,o.data.toast.color,6e4),o.data.token!==void 0&&q(e,o.data.token))}async function fe(n){let e=H();if(e===null)return;let t=p(P),r=new Date;if(t!==null)V(r,t),await ee(n,t,r),y();else{let o=$(e);o!==null&&(await ee(n,o.sacode,o.iat),y())}}async function Se(){let n=_(!0);if(n===null)return;let e=n.getItem(D);e!==null&&window.location.pathname!=="/challenge"&&window.location.pathname!=="/account/login"&&window.location.pathname!=="/account/register"&&p(R)===null&&(n.removeItem(D),window.location.href=e);let t=p(R);t!==null&&n.setItem(M,t);let r=n.getItem(M);if(r===null)return;if(window.location.pathname!=="/account/register"&&!window.location.pathname.includes("/account/activate")&&window.location.pathname!=="/challenge"){n.removeItem(M);return}let o=document.querySelector('form[action$="/account"][method="post"]')??document.querySelector('form[action$="/account/login"][method="post"]'),s=document.querySelector('form[action$="/account/activate"][method="post"]');if(o===null&&s===null)return;let i=document.querySelector('form[action$="/account"][method="post"] script'),b=document.getElementById("g-recaptcha");if(i&&!b){n.setItem(D,r);return}let u=document.createElement("input");if(u.type="hidden",u.name="return_to",u.value=r,o&&o.appendChild(u),s){let m=document.createElement("input");m.type="hidden",m.name="customer[send_email_welcome]",m.value="false",s.appendChild(u),s.appendChild(m),console.log("activation form inject")}}function he(){let n=p(L);if(n!==null){let e=_(!0);e!==null&&e.setItem(v,n)}}async function Ae(){let n="SA_NOTIFICATION_JS_LOADED";if(window[n])return;window[n]=!0;let e=Z(I),t=X(I);t.runAsyncBackground(()=>Se()),await j(),t.runAsyncBackground(()=>fe(e)),t.runSync(he)}Q(Ae);})();
